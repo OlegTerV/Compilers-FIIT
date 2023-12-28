@@ -1,0 +1,140 @@
+stages:
+  - build
+  - lexer
+  - simplelexer
+  - generatedlexer
+  - descentparser
+  - generatedparser
+  - astparser
+  - visitors
+  - codegenerator
+
+#before_script:
+#  - export COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
+
+build_all:
+  stage: build
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+  tags:
+    - docker
+  #artifacts:
+  #  paths:
+  #    - ./NunitReportParser/bin/Debug/NunitReportParser.exe
+  #    - ./TestSimpleLexer/bin/Debug/TestSimpleLexer.dll
+  #    - ./TestLexer/bin/Debug/TestLexer.dll
+  #    - ./TestGeneratedLexer/bin/Debug/TestGeneratedLexer.dll
+  #    - ./TestDescentParser/bin/Debug/TestDescentParser.dll
+  #    - ./TestGeneratedParser/bin/Debug/TestGeneratedParser.dll
+  #    - ./TestASTParser/bin/Debug/TestASTParser.dll
+  #    - ./TestVisitors/bin/Debug/TestVisitors.dll
+  #    - ./TestCodeGenerator/bin/Debug/TestCodeGenerator.dll
+  #  expire_in: 1 week
+
+
+testsimplelexer:
+  stage: simplelexer
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+    - exit_code=0
+    - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe --labels=ON TestSimpleLexer/bin/Debug/TestSimpleLexer.dll || exit_code=$?
+    - mono NunitReportParser/bin/Debug/NunitReportParser.exe ${CI_PROJECT_DIR} ${CI_PROJECT_NAMESPACE} ${CI_COMMIT_TIMESTAMP} || 0
+    - if [ ${exit_code} -ne 0 ]; then exit 10 ; else exit 0; fi
+  tags:
+    - docker
+  
+testlexer:
+  stage: lexer
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+    - exit_code=0
+    - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe --labels=ON TestLexer/bin/Debug/TestLexer.dll || exit_code=$?
+    - mono NunitReportParser/bin/Debug/NunitReportParser.exe ${CI_PROJECT_DIR} ${CI_PROJECT_NAMESPACE} ${CI_COMMIT_TIMESTAMP} || 0
+    - if [ ${exit_code} -ne 0 ]; then exit 10 ; else exit 0; fi
+  tags:
+    - docker
+
+testgeneratedlexer:
+  stage: generatedlexer
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+    - exit_code=0
+    - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe --labels=ON TestGeneratedLexer/bin/Debug/TestGeneratedLexer.dll || exit_code=$?
+    - mono NunitReportParser/bin/Debug/NunitReportParser.exe ${CI_PROJECT_DIR} ${CI_PROJECT_NAMESPACE} ${CI_COMMIT_TIMESTAMP} || 0
+    - if [ ${exit_code} -ne 0 ]; then exit 10 ; else exit 0; fi
+  tags:
+    - docker    
+
+testdescentparser:
+  stage: descentparser
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+    - exit_code=0
+    - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe --labels=ON TestDescentParser/bin/Debug/TestDescentParser.dll || exit_code=$?
+    - mono NunitReportParser/bin/Debug/NunitReportParser.exe ${CI_PROJECT_DIR} ${CI_PROJECT_NAMESPACE} ${CI_COMMIT_TIMESTAMP} || 0
+    - if [ ${exit_code} -ne 0 ]; then exit 10 ; else exit 0; fi
+  tags:
+    - docker        
+
+testgeneratedparser:
+  stage: generatedparser
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+    - exit_code=0
+    - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe --labels=ON TestGeneratedParser/bin/Debug/TestGeneratedParser.dll || exit_code=$?
+    - mono NunitReportParser/bin/Debug/NunitReportParser.exe ${CI_PROJECT_DIR} ${CI_PROJECT_NAMESPACE} ${CI_COMMIT_TIMESTAMP} || 0
+    - if [ ${exit_code} -ne 0 ]; then exit 10 ; else exit 0; fi
+  tags:
+    - docker            
+
+testastparser:
+  stage: astparser
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+    - exit_code=0
+    - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe --labels=ON TestASTParser/bin/Debug/TestASTParser.dll || exit_code=$?
+    - mono NunitReportParser/bin/Debug/NunitReportParser.exe ${CI_PROJECT_DIR} ${CI_PROJECT_NAMESPACE} ${CI_COMMIT_TIMESTAMP} || 0
+    - if [ ${exit_code} -ne 0 ]; then exit 10 ; else exit 0; fi
+  tags:
+    - docker                
+
+testvisitors:
+  stage: visitors
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+    - exit_code=0
+    - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe --labels=ON TestVisitors/bin/Debug/TestVisitors.dll || exit_code=$?
+    - mono NunitReportParser/bin/Debug/NunitReportParser.exe ${CI_PROJECT_DIR} ${CI_PROJECT_NAMESPACE} ${CI_COMMIT_TIMESTAMP} || 0
+    - if [ ${exit_code} -ne 0 ]; then exit 10 ; else exit 0; fi
+  tags:
+    - docker                
+
+testcodegenerator:
+  stage: codegenerator
+  image: czen/ubuntu_xbuild
+  script:
+    - ./prebuild.sh
+    - ./build.sh
+    - exit_code=0
+    - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe --labels=ON TestCodeGenerator/bin/Debug/TestCodeGenerator.dll || exit_code=$?
+    - mono NunitReportParser/bin/Debug/NunitReportParser.exe ${CI_PROJECT_DIR} ${CI_PROJECT_NAMESPACE} ${CI_COMMIT_TIMESTAMP} || 0
+    - if [ ${exit_code} -ne 0 ]; then exit 10 ; else exit 0; fi
+  tags:
+    - docker                    
+  

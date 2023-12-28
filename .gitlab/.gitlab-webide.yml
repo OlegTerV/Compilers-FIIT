@@ -1,0 +1,4 @@
+terminal:
+  # This can be any image that has the necessary runtime environment for your project.
+  image: czen/ubuntu_xbuild
+  script: sleep 60
